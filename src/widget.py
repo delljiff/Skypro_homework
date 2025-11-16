@@ -21,3 +21,8 @@ def mask_account_card(card_or_acc_data: str) -> str:
         return f'{card_title} {masked_num}'
     else:
         return 'Неверно введены данные'
+
+
+def get_date(unformatted_date: str) -> str:
+    """Функция преобразует поступаемую на вход дату в формат ДД.ММ.ГГГГ"""
+    return f'{unformatted_date[8:10]}.{unformatted_date[5:7]}.{unformatted_date[0:4]}'
