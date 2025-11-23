@@ -3,7 +3,7 @@ from typing import List
 
 def processing(data: List, state: str = "EXECUTED") -> List:
     """
-    Функция сортирует список словарей по заданному параметру state
+    Функция сортирует список словарей по заранее известному параметру state
     """
     if not data:
         return []
