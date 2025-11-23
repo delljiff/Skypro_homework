@@ -1,6 +1,9 @@
 from typing import List
 
 def processing(data: List, state: str='EXECUTED') -> List:
+    """
+    Функция сортирует список словарей по заданному параметру state
+    """
     if not data:
         return []
     else:
@@ -8,6 +11,9 @@ def processing(data: List, state: str='EXECUTED') -> List:
 
 
 def sort_by_date(next_data: List, reverse: bool=True) -> List:
+    """
+    Функция сортирует список словарей по параметру date по убыванию
+    """
     if not next_data:
         return []
     else:
