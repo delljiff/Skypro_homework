@@ -13,7 +13,7 @@ def processing(data: List, state: str = "EXECUTED") -> List:
 
 def sort_by_date(next_data: List, reverse: bool = True) -> List:
     """
-    Функция сортирует список словарей по параметру date по убыванию
+    Функция для сортировки список словарей по параметру date по убыванию
     """
     if not next_data:
         return []
