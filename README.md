@@ -55,7 +55,7 @@ state. Функция возвращает новый список словар�
 
 1. Клонируйте репозиторий:
 ```
-git clone https://github.com/username/myblog.git
+git clone https://github.com/delljiff/Skypro_homework.git -b develop
 ```
 2. Активация виртуального окружения:
 ```
