@@ -6,7 +6,7 @@ def get_mask_card_number(card_number: str) -> str:
         result_1 = ""
         for i in range(0, len(masked_card_number), 4):
             result_1 += masked_card_number[i : i + 4] + " "
-        return result_1
+        return result_1.strip()
     else:
         return "Вы неверно ввели номер карты"
 
