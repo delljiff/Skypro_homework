@@ -69,4 +69,26 @@ poetry install
 ```
 python main.py
 ```
+
+## Тестирование:
+
+1. Установка зависимостей
+```
+pip install pytest pytest-cov
+```
+2. Запуск всех тестов
+```
+pytest
+```
+3. Запуск каждого теста по отдельности
+```
+pytest tests/test_masks.py
+pytest tests/test_widget.py
+pytest tests/test_processing.py
+```
+4. Запуск с отчетом о покрытии
+```
+poetry run pytest --cov 
+pytest --cov=src --cov-report=html
+```
 ## Удачи в использовании!
