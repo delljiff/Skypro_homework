@@ -1,6 +1,6 @@
-import pytest
+from typing import Any, Dict, List, Union
 
-from typing import List, Dict, Any, Union
+import pytest
 
 from src.processing import filter_by_state, sort_by_date
 
