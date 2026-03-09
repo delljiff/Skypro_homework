@@ -20,10 +20,10 @@ def transactions() -> List[Dict[str, Any]]:
 @pytest.mark.parametrize(
     "currency, expected_count, expected_ids",
     [
-        ("USD", 2, [1, 3]),  # Долларовые транзакции
-        ("EUR", 1, [2]),  # Транзакции в евро
-        ("RUB", 1, [4]),  # Транзакции в рублях
-        ("GBP", 0, []),  # Нет транзакций в фунтах
+        ("USD", 2, [1, 3]),
+        ("EUR", 1, [2]),
+        ("RUB", 1, [4]),
+        ("GBP", 0, []),
     ],
 )
 def test_filter_by_currency(
@@ -75,8 +75,8 @@ def test_transaction_descriptions_empty() -> None:
 @pytest.mark.parametrize(
     "start, stop, expected_count, expected_first, expected_last",
     [
-        (1, 3, 3, "0000 0000 0000 0001", "0000 0000 0000 0003"),  # Начало диапазона
-        (9999, 10001, 3, "0000 0000 0000 9999", "0000 0000 0001 0001"),  # Переход через разряд
+        (1, 3, 3, "0000 0000 0000 0001", "0000 0000 0000 0003"),
+        (9999, 10001, 3, "0000 0000 0000 9999", "0000 0000 0001 0001"),
     ],
 )
 def test_card_number_generator(
@@ -102,7 +102,7 @@ def test_card_number_generator_format() -> None:
     result: List[str] = list(card_number_generator(12345678, 12345678))
 
     assert result[0] is not None
-    assert len(result[0]) == 19  # 16 цифр + 3 пробела
+    assert len(result[0]) == 19
 
     parts: List[str] = result[0].split()
     assert len(parts) == 4

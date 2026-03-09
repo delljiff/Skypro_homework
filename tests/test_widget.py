@@ -68,8 +68,6 @@ def test_mask_account_card_with_fixture(data_for_input_3: List[Tuple[str, str]])
         ("", "Неверно введены данные"),
     ],
 )
-
-
 # Проверка работоспособности с параметризацией mask_account_card
 def test_with_parametrize_3(card_acc_data: str, expected: str) -> None:
     assert mask_account_card(card_acc_data) == expected
@@ -141,8 +139,6 @@ def test_get_date_with_fixture(data_for_input_4: List[Tuple[str, str]]) -> None:
         ("@#$%^&*()", "Неверный формат даты"),
     ],
 )
-
-
 # Проверка работоспособности с параметризацией get_date
 def test_with_parametrize_4(input_date: str, expected: str) -> None:
     assert get_date(input_date) == expected

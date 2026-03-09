@@ -52,8 +52,6 @@ def test_with_fixture(data_for_input: List[Tuple[str, str]]) -> None:
         ("", "Вы неверно ввели номер карты")
     ]
 )
-
-
 # Проверка раотоспособности с параметризацией get_mask_card_number
 def test_with_parametrize(card_data: str, expected: str) -> None:
     assert get_mask_card_number(card_data) == expected
@@ -103,8 +101,6 @@ def test_with_fixture_2(data_for_input_2: List[Tuple[str, str]]) -> None:
         ("", "Вы неверно ввели номер счета")
     ]
 )
-
-
 # Проверка работоспособности с параметризацией get_mask_account
 def test_with_parametrize_2(account_data: str, expected: str) -> None:
     assert get_mask_account(account_data) == expected
