@@ -9,3 +9,14 @@ def transaction_descriptions(transactions):
         yield transaction["description"]
 
 
+def card_number_generator(start, stop):
+    for num in range(start, stop+1):
+        formatted_number = "{:04d} {:04d} {:04d} {:04d}".format(
+    num // 10**12, (num // 10**8) % 10**4, (num // 10**4) % 10**4, num % 10**4
+)
+        yield formatted_number
+
+
+
+
+
