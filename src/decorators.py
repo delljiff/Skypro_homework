@@ -1,9 +1,11 @@
-from typing import Optional, Any, Callable
+from typing import Any, Callable, Optional
 
 
 def log(filename: Optional[str] = None) -> Callable:
     """
     Декоратор для логирования вызовов функций.
+
+    Логирует успешные вызовы и ошибки в консоль или файл.
 
     Параметры:
         filename (Optional[str]): Имя файла для записи логов.
@@ -11,6 +13,15 @@ def log(filename: Optional[str] = None) -> Callable:
 
     Возвращает:
         Callable: Декоратор функции.
+
+    Пример:
+        @log()
+        def add(a, b):
+            return a + b
+
+        @log(filename="log.txt")
+        def div(a, b):
+            return a / b
     """
 
     def decorator(func: Callable) -> Callable:
@@ -40,9 +51,9 @@ def log(filename: Optional[str] = None) -> Callable:
             """
             try:
                 result = func(*args, **kwargs)
-                msg = f"OK: {func.__name__}{args}{kwargs} = {result}"
+                msg = f"{func.__name__} ok"
             except Exception as e:
-                msg = f"ERROR: {func.__name__}{args}{kwargs} -> {type(e).__name__}"
+                msg = f"{func.__name__} error: {type(e).__name__}. Inputs: {args}, {kwargs}"
                 raise
             finally:
                 if filename:

@@ -1,23 +1,24 @@
-import pytest
-from _pytest.capture import CaptureFixture
 from pathlib import Path
+from typing import Any
+
+import pytest
 
 from src.decorators import log
 
 
 # ===== ТЕСТ 1: Логирование в консоль при успехе =====
-def test_log_console_success(capsys: CaptureFixture[str]) -> None:
+def test_log_console_success(capsys: Any) -> None:
     @log()
     def add(a: int, b: int) -> int:
         return a + b
 
     add(2, 3)
-    captured: CaptureFixture[str].CaptureResult = capsys.readouterr()
+    captured = capsys.readouterr()
     assert captured.out.strip() == "add ok"
 
 
 # ===== ТЕСТ 2: Логирование в консоль при ошибке =====
-def test_log_console_error(capsys: CaptureFixture[str]) -> None:
+def test_log_console_error(capsys: Any) -> None:
     @log()
     def div(a: int, b: int) -> float:
         return a / b
@@ -25,7 +26,7 @@ def test_log_console_error(capsys: CaptureFixture[str]) -> None:
     with pytest.raises(ZeroDivisionError):
         div(10, 0)
 
-    captured: CaptureFixture[str].CaptureResult = capsys.readouterr()
+    captured = capsys.readouterr()
     assert "div error: ZeroDivisionError. Inputs: (10, 0), {}" in captured.out
 
 
