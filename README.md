@@ -138,6 +138,8 @@ my_function error: тип ошибки. Inputs: (1, 2), {}
 тип ошибки
  заменяется на текст ошибки.
 ```
+## Модуль 6 (transactions):
+* происходит считывание финансовых операций из файла **transactions.csv** и **transactions_excel.xlsx**.
 ## Установка:
 
 1. Клонируйте репозиторий:
@@ -174,6 +176,7 @@ pytest tests/test_widget.py
 pytest tests/test_processing.py
 pytest tests/test_generators.py
 pytest tests/test_decorators.py
+pytest tests/test_transactions.py
 ```
 4. Запуск с отчетом о покрытии
 ```
