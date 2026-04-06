@@ -112,6 +112,34 @@ for card_number in card_number_generator(1, 5):
     0000 0000 0000 0004
     0000 0000 0000 0005
 ```
+## Модуль 5 (decorators):
+* **log** - декоратор, который будет автоматически логировать начало и конец выполнения функции, а также ее результаты или возникшие ошибки.
+Декоратор должен принимать необязательный аргумент 
+filename
+, который определяет, куда будут записываться логи (в файл или в консоль). Пример:
+```
+@log(filename="mylog.txt")
+def my_function(x, y):
+    return x + y
+
+my_function(1, 2)
+
+Ожидаемый вывод в лог-файл 
+mylog.txt
+ при успешном выполнении:
+
+my_function ok
+
+Ожидаемый вывод при ошибке:
+
+my_function error: тип ошибки. Inputs: (1, 2), {}
+
+Где 
+тип ошибки
+ заменяется на текст ошибки.
+```
+## Модуль 6 (transactions):
+* происходит считывание финансовых операций из файла **transactions.csv** и **transactions_excel.xlsx**.
 ## Установка:
 
 1. Клонируйте репозиторий:
@@ -147,6 +175,8 @@ pytest tests/test_masks.py
 pytest tests/test_widget.py
 pytest tests/test_processing.py
 pytest tests/test_generators.py
+pytest tests/test_decorators.py
+pytest tests/test_transactions.py
 ```
 4. Запуск с отчетом о покрытии
 ```
