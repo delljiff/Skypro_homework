@@ -2,7 +2,7 @@ from typing import Any, Dict, List, Union
 
 import pytest
 
-from src.processing import filter_by_state, sort_by_date
+from src.processing import filter_by_state, sort_by_date, process_bank_search, process_bank_operations
 
 
 # Тестирование фильтрации списка словарей по заданному статусу state
@@ -168,3 +168,61 @@ def test_sort_by_date_with_param(
     else:
         result = sort_by_date(test_data, reverse=reverse)
         assert [d["date"] for d in result] == expected
+
+
+@pytest.fixture
+def sample_transactions():
+    """Тестовые данные для проверки функций."""
+    return [
+        {"id": 1, "description": "Перевод организации", "state": "EXECUTED"},
+        {"id": 2, "description": "Открытие вклада", "state": "EXECUTED"},
+        {"id": 3, "description": "Перевод с карты на карту", "state": "CANCELED"},
+        {"id": 4, "description": "Перевод организации", "state": "EXECUTED"},
+        {},
+        {"id": 5, "description": "Оплата услуг", "state": "PENDING"},
+    ]
+
+
+class TestProcessBankSearch:
+    """Тесты для функции process_bank_search (поиск по описанию)."""
+
+    def test_search_found(self, sample_transactions):
+        """Ищем 'перевод' — должно найти 3 транзакции."""
+        result = process_bank_search(sample_transactions, "перевод")
+        assert len(result) == 3
+        assert all("перевод" in t.get("description", "").lower() for t in result)
+
+    def test_search_not_found(self, sample_transactions):
+        """Ищем 'несуществующее слово' — пустой результат."""
+        result = process_bank_search(sample_transactions, "несуществующее")
+        assert result == []
+
+    def test_search_empty_string(self, sample_transactions):
+        """Пустая строка поиска — возвращаем все транзакции."""
+        result = process_bank_search(sample_transactions, "")
+        assert len(result) == len([t for t in sample_transactions if t])
+
+
+class TestProcessBankOperations:
+    """Тесты для функции process_bank_operations (подсчет категорий)."""
+
+    def test_count_categories(self, sample_transactions):
+        """Считаем категории 'Перевод организации' и 'Открытие вклада'."""
+        categories = ["Перевод организации", "Открытие вклада", "Несуществующая"]
+        result = process_bank_operations(sample_transactions, categories)
+
+        assert result["Перевод организации"] == 2
+        assert result["Открытие вклада"] == 1
+        assert result["Несуществующая"] == 0
+
+    def test_empty_categories(self, sample_transactions):
+        """Пустой список категорий — возвращаем пустой словарь."""
+        result = process_bank_operations(sample_transactions, [])
+        assert result == {}
+
+    def test_empty_transactions(self):
+        """Пустой список транзакций — все категории с нулями."""
+        categories = ["Перевод", "Вклад"]
+        result = process_bank_operations([], categories)
+        assert result["Перевод"] == 0
+        assert result["Вклад"] == 0
