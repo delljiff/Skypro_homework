@@ -1,18 +1,17 @@
-import sys
 import os
+import sys
+
+from src.file_reader import read_csv, read_json, read_xlsx
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-from src.processing import process_bank_search, process_bank_operations
-from src.file_reader import read_json, read_csv, read_xlsx
 
 
 def load_transactions(choice: str) -> list:
     """Загружает транзакции из выбранного файла."""
-    if choice == '1':
+    if choice == "1":
         filepath = "data/operations.json"
         return read_json(filepath)
-    elif choice == '2':
+    elif choice == "2":
         filepath = "data/transactions.csv"
         return read_csv(filepath)
     else:
@@ -29,15 +28,15 @@ def main():
 
     while True:
         choice = input("Ваш выбор (1/2/3): ").strip()
-        if choice in ['1', '2', '3']:
+        if choice in ["1", "2", "3"]:
             break
         print("Неверный ввод. Пожалуйста, выберите 1, 2 или 3.")
 
     transactions = load_transactions(choice)
 
-    if choice == '1':
+    if choice == "1":
         print("\nДля обработки выбран JSON-файл.")
-    elif choice == '2':
+    elif choice == "2":
         print("\nДля обработки выбран CSV-файл.")
     else:
         print("\nДля обработки выбран XLSX-файл.")
@@ -50,6 +49,7 @@ def main():
 
     selected_status = get_status_from_user()
     from src.processing import filter_by_state
+
     filtered_by_status = filter_by_state(transactions, selected_status)
 
     print(f"После фильтрации по статусу осталось транзакций: {len(filtered_by_status)}")
@@ -61,6 +61,7 @@ def main():
     need_sort, reverse = ask_sort_by_date()
     if need_sort:
         from src.processing import sort_by_date
+
         filtered_by_status = sort_by_date(filtered_by_status, reverse=reverse)
         print("Транзакции отсортированы по дате")
 
@@ -72,6 +73,7 @@ def main():
     search_string = ask_search_by_description()
     if search_string:
         from src.processing import process_bank_search
+
         filtered_by_status = process_bank_search(filtered_by_status, search_string)
         print(f"Отфильтровано по описанию. Осталось транзакций: {len(filtered_by_status)}")
 
@@ -83,7 +85,7 @@ def main():
 
     for t in filtered_by_status:
         # Форматируем дату из "2019-08-26T10:50:58.294041" в "26.08.2019"
-        date_str = t.get('date', '')[:10]
+        date_str = t.get("date", "")[:10]
         if date_str:
             date_formatted = f"{date_str[8:10]}.{date_str[5:7]}.{date_str[:4]}"
         else:
@@ -91,15 +93,15 @@ def main():
 
         print(f"\n{date_formatted} {t.get('description', '')}")
 
-        from_info = t.get('from', '')
-        to_info = t.get('to', '')
+        from_info = t.get("from", "")
+        to_info = t.get("to", "")
         if from_info and to_info:
             print(f"{from_info} -> {to_info}")
         elif to_info:
             print(f"{to_info}")
 
-        amount = t.get('amount', 0)
-        currency = t.get('currency', '')
+        amount = t.get("amount", 0)
+        currency = t.get("currency", "")
         print(f"Сумма: {amount} {currency}")
 
     print(f"\nВсего банковских операций в выборке: {len(filtered_by_status)}")
@@ -118,10 +120,10 @@ def get_status_from_user() -> str:
         status = input("Статус: ").strip().upper()
 
         if status in valid_statuses:
-            print(f"Операции отфильтрованы по статусу \"{status}\"")
+            print(f'Операции отфильтрованы по статусу "{status}"')
             return status
         else:
-            print(f"Статус операции \"{status}\" недоступен.")
+            print(f'Статус операции "{status}" недоступен.')
 
 
 def ask_sort_by_date() -> tuple:
@@ -132,20 +134,20 @@ def ask_sort_by_date() -> tuple:
     """
     while True:
         answer = input("\nОтсортировать операции по дате? Да/Нет: ").strip().lower()
-        if answer in ['да', 'нет']:
+        if answer in ["да", "нет"]:
             break
         print("Пожалуйста, ответьте 'Да' или 'Нет'")
 
-    if answer == 'нет':
+    if answer == "нет":
         return False, None
 
     while True:
         order = input("Отсортировать по возрастанию или по убыванию?: ").strip().lower()
-        if order in ['по возрастанию', 'по убыванию']:
+        if order in ["по возрастанию", "по убыванию"]:
             break
         print("Пожалуйста, ответьте 'по возрастанию' или 'по убыванию'")
 
-    reverse = (order == 'по убыванию')
+    reverse = order == "по убыванию"
     return True, reverse
 
 
@@ -156,8 +158,8 @@ def ask_ruble_only() -> bool:
     """
     while True:
         answer = input("\nВыводить только рублевые транзакции? Да/Нет: ").strip().lower()
-        if answer in ['да', 'нет']:
-            return answer == 'да'
+        if answer in ["да", "нет"]:
+            return answer == "да"
         print("Пожалуйста, ответьте 'Да' или 'Нет'")
 
 
@@ -169,11 +171,11 @@ def ask_search_by_description() -> str or None:
     """
     while True:
         answer = input("\nОтфильтровать список транзакций по определенному слову в описании? Да/Нет: ").strip().lower()
-        if answer in ['да', 'нет']:
+        if answer in ["да", "нет"]:
             break
         print("Пожалуйста, ответьте 'Да' или 'Нет'")
 
-    if answer == 'нет':
+    if answer == "нет":
         return None
 
     search_string = input("Введите слово или фразу для поиска: ").strip()
@@ -182,7 +184,7 @@ def ask_search_by_description() -> str or None:
 
 def filter_by_ruble(transactions: list) -> list:
     """Оставляет только транзакции с валютой RUB."""
-    return [t for t in transactions if t.get('currency') == 'RUB']
+    return [t for t in transactions if t.get("currency") == "RUB"]
 
 
 if __name__ == "__main__":

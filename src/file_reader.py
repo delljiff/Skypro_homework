@@ -1,6 +1,6 @@
-import json
 import csv
-from typing import List, Dict
+import json
+from typing import Dict, List
 
 
 def read_json(filepath: str) -> List[Dict]:
@@ -8,7 +8,7 @@ def read_json(filepath: str) -> List[Dict]:
     Читает JSON-файл с транзакциями.
     Возвращает список словарей с единой структурой.
     """
-    with open(filepath, 'r', encoding='utf-8') as f:
+    with open(filepath, "r", encoding="utf-8") as f:
         data = json.load(f)
 
     transactions = []
@@ -17,19 +17,21 @@ def read_json(filepath: str) -> List[Dict]:
             continue
 
         # Для JSON сумма и валюта вложены в operationAmount
-        amount = float(item.get('operationAmount', {}).get('amount', 0))
-        currency = item.get('operationAmount', {}).get('currency', {}).get('code', '')
+        amount = float(item.get("operationAmount", {}).get("amount", 0))
+        currency = item.get("operationAmount", {}).get("currency", {}).get("code", "")
 
-        transactions.append({
-            'id': item.get('id'),
-            'state': item.get('state'),
-            'date': item.get('date'),
-            'amount': amount,
-            'currency': currency,
-            'description': item.get('description', ''),
-            'from': item.get('from', ''),
-            'to': item.get('to', '')
-        })
+        transactions.append(
+            {
+                "id": item.get("id"),
+                "state": item.get("state"),
+                "date": item.get("date"),
+                "amount": amount,
+                "currency": currency,
+                "description": item.get("description", ""),
+                "from": item.get("from", ""),
+                "to": item.get("to", ""),
+            }
+        )
     return transactions
 
 
@@ -39,22 +41,24 @@ def read_csv(filepath: str) -> List[Dict]:
     Возвращает список словарей с единой структурой.
     """
     transactions = []
-    with open(filepath, 'r', encoding='utf-8') as f:
-        reader = csv.DictReader(f, delimiter=';')
+    with open(filepath, "r", encoding="utf-8") as f:
+        reader = csv.DictReader(f, delimiter=";")
         for row in reader:
-            if not row.get('id'):  # пропускаем пустые строки
+            if not row.get("id"):  # пропускаем пустые строки
                 continue
 
-            transactions.append({
-                'id': int(row['id']) if row.get('id') else None,
-                'state': row.get('state'),
-                'date': row.get('date'),
-                'amount': float(row['amount']) if row.get('amount') else 0,
-                'currency': row.get('currency_code', ''),
-                'description': row.get('description', ''),
-                'from': row.get('from', ''),
-                'to': row.get('to', '')
-            })
+            transactions.append(
+                {
+                    "id": int(row["id"]) if row.get("id") else None,
+                    "state": row.get("state"),
+                    "date": row.get("date"),
+                    "amount": float(row["amount"]) if row.get("amount") else 0,
+                    "currency": row.get("currency_code", ""),
+                    "description": row.get("description", ""),
+                    "from": row.get("from", ""),
+                    "to": row.get("to", ""),
+                }
+            )
     return transactions
 
 
@@ -81,14 +85,16 @@ def read_xlsx(filepath: str) -> List[Dict]:
             continue
 
         row_dict = dict(zip(headers, row))
-        transactions.append({
-            'id': int(row_dict['id']) if row_dict.get('id') else None,
-            'state': row_dict.get('state'),
-            'date': row_dict.get('date'),
-            'amount': float(row_dict['amount']) if row_dict.get('amount') else 0,
-            'currency': row_dict.get('currency_code', ''),
-            'description': row_dict.get('description', ''),
-            'from': row_dict.get('from', ''),
-            'to': row_dict.get('to', '')
-        })
+        transactions.append(
+            {
+                "id": int(row_dict["id"]) if row_dict.get("id") else None,
+                "state": row_dict.get("state"),
+                "date": row_dict.get("date"),
+                "amount": float(row_dict["amount"]) if row_dict.get("amount") else 0,
+                "currency": row_dict.get("currency_code", ""),
+                "description": row_dict.get("description", ""),
+                "from": row_dict.get("from", ""),
+                "to": row_dict.get("to", ""),
+            }
+        )
     return transactions

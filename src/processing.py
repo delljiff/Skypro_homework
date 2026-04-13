@@ -39,7 +39,7 @@ def process_bank_search(data: List[Dict], search: str) -> List[Dict]:
     for transaction in data:
         if not transaction:  # пропускаем пустые словари
             continue
-        description = transaction.get('description', '')
+        description = transaction.get("description", "")
         if pattern.search(description):
             result.append(transaction)
 
@@ -48,16 +48,16 @@ def process_bank_search(data: List[Dict], search: str) -> List[Dict]:
 
 def process_bank_operations(data: List[Dict], categories: str) -> List[Dict]:
     """
-        Принимает список словарей с банковскими операциями и список категорий.
-        Возвращает словарь, где ключ — категория, значение — количество операций в этой категории.
-        Категория определяется по полю description.
+    Принимает список словарей с банковскими операциями и список категорий.
+    Возвращает словарь, где ключ — категория, значение — количество операций в этой категории.
+    Категория определяется по полю description.
 
-        Args:
-            data: список словарей с транзакциями
-            categories: список категорий для подсчета
+    Args:
+        data: список словарей с транзакциями
+        categories: список категорий для подсчета
 
-        Returns:
-            словарь {категория: количество}
+    Returns:
+        словарь {категория: количество}
     """
     from collections import Counter
 
@@ -68,7 +68,7 @@ def process_bank_operations(data: List[Dict], categories: str) -> List[Dict]:
     for transaction in data:
         if not transaction:
             continue
-        desc = transaction.get('description', '')
+        desc = transaction.get("description", "")
         if desc in categories:
             matched.append(desc)
 
