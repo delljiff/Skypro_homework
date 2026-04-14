@@ -1,5 +1,6 @@
 import csv
 import json
+import os
 from typing import Dict, List
 
 
@@ -8,6 +9,10 @@ def read_json(filepath: str) -> List[Dict]:
     Читает JSON-файл с транзакциями.
     Возвращает список словарей с единой структурой.
     """
+    if not os.path.exists(filepath):
+        print(f"Ошибка: файл {filepath} не найден")
+        return []
+
     with open(filepath, "r", encoding="utf-8") as f:
         data = json.load(f)
 
@@ -40,6 +45,10 @@ def read_csv(filepath: str) -> List[Dict]:
     Читает CSV-файл с транзакциями.
     Возвращает список словарей с единой структурой.
     """
+    if not os.path.exists(filepath):
+        print(f"Ошибка: файл {filepath} не найден")
+        return []
+
     transactions = []
     with open(filepath, "r", encoding="utf-8") as f:
         reader = csv.DictReader(f, delimiter=";")
@@ -67,6 +76,10 @@ def read_xlsx(filepath: str) -> List[Dict]:
     Читает XLSX-файл с транзакциями.
     Возвращает список словарей с единой структурой.
     """
+    if not os.path.exists(filepath):
+        print(f"Ошибка: файл {filepath} не найден")
+        return []
+
     try:
         from openpyxl import load_workbook
     except ImportError:

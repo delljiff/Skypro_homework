@@ -1,7 +1,33 @@
 import os
 import sys
 
-from src.file_reader import read_csv, read_json, read_xlsx
+from file_reader import read_csv, read_json, read_xlsx
+
+
+def mask_account(number: str) -> str:
+    """Маскирует номер счета или карты."""
+    if not number:
+        return ""
+
+    if "Счет" in number:
+        # Для счета: Счет **1234
+        digits = number.replace("Счет ", "")
+        if digits.isdigit():
+            return f"Счет **{digits[-4:]}"
+        return number
+
+    # Для карты: Visa Platinum 1234 12** **** 5678
+    parts = number.split()
+    if len(parts) >= 2:
+        # Последняя часть - номер карты
+        card_number = parts[-1]
+        if card_number.isdigit() and len(card_number) == 16:
+            # Остальные части - название карты (Visa, MasterCard и т.д.)
+            card_type = " ".join(parts[:-1])
+            return f"{card_type} {card_number[:4]} {card_number[4:6]}** **** {card_number[-4:]}"
+
+    return number
+
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -96,9 +122,9 @@ def main():
         from_info = t.get("from", "")
         to_info = t.get("to", "")
         if from_info and to_info:
-            print(f"{from_info} -> {to_info}")
+            print(f"{mask_account(from_info)} -> {mask_account(to_info)}")
         elif to_info:
-            print(f"{to_info}")
+            print(f"{mask_account(to_info)}")
 
         amount = t.get("amount", 0)
         currency = t.get("currency", "")
