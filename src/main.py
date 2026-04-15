@@ -2,47 +2,39 @@ import os
 import sys
 
 from file_reader import read_csv, read_json, read_xlsx
-
-
-def mask_account(number: str) -> str:
-    """Маскирует номер счета или карты."""
-    if not number:
-        return ""
-
-    if "Счет" in number:
-        # Для счета: Счет **1234
-        digits = number.replace("Счет ", "")
-        if digits.isdigit():
-            return f"Счет **{digits[-4:]}"
-        return number
-
-    # Для карты: Visa Platinum 1234 12** **** 5678
-    parts = number.split()
-    if len(parts) >= 2:
-        # Последняя часть - номер карты
-        card_number = parts[-1]
-        if card_number.isdigit() and len(card_number) == 16:
-            # Остальные части - название карты (Visa, MasterCard и т.д.)
-            card_type = " ".join(parts[:-1])
-            return f"{card_type} {card_number[:4]} {card_number[4:6]}** **** {card_number[-4:]}"
-
-    return number
-
+from widget import mask_account_card
+from generators import filter_by_currency
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 
 def load_transactions(choice: str) -> list:
-    """Загружает транзакции из выбранного файла."""
+    """Загружает транзакции из выбранного файла. Ищет файл в разных местах."""
+    import os
+
+    # Возможные имена файлов
     if choice == "1":
-        filepath = "data/operations.json"
-        return read_json(filepath)
+        filenames = ["operations.json", "data/operations.json", "../data/operations.json"]
     elif choice == "2":
-        filepath = "data/transactions.csv"
-        return read_csv(filepath)
+        filenames = ["transactions.csv", "data/transactions.csv", "../data/transactions.csv"]
     else:
-        filepath = "data/transactions_excel.xlsx"
-        return read_xlsx(filepath)
+        filenames = ["transactions_excel.xlsx", "data/transactions_excel.xlsx", "../data/transactions_excel.xlsx"]
+
+    # Перебираем возможные пути
+    for filename in filenames:
+        if os.path.exists(filename):
+            print(f"Найден файл: {filename}")
+            if choice == "1":
+                return read_json(filename)
+            elif choice == "2":
+                return read_csv(filename)
+            else:
+                return read_xlsx(filename)
+
+    # Если ничего не нашли
+    print(f"Ошибка: файл не найден. Искали: {filenames}")
+    print("Текущая рабочая папка:", os.getcwd())
+    return []
 
 
 def main():
@@ -93,7 +85,7 @@ def main():
 
     ruble_only = ask_ruble_only()
     if ruble_only:
-        filtered_by_status = filter_by_ruble(filtered_by_status)
+        filtered_by_status = filter_by_currency(filtered_by_status, "RUB")
         print("Оставлены только рублевые транзакции")
 
     search_string = ask_search_by_description()
@@ -122,9 +114,9 @@ def main():
         from_info = t.get("from", "")
         to_info = t.get("to", "")
         if from_info and to_info:
-            print(f"{mask_account(from_info)} -> {mask_account(to_info)}")
+            print(f"{mask_account_card(from_info)} -> {mask_account_card(to_info)}")
         elif to_info:
-            print(f"{mask_account(to_info)}")
+            print(f"{mask_account_card(to_info)}")
 
         amount = t.get("amount", 0)
         currency = t.get("currency", "")
@@ -206,11 +198,6 @@ def ask_search_by_description() -> str or None:
 
     search_string = input("Введите слово или фразу для поиска: ").strip()
     return search_string if search_string else None
-
-
-def filter_by_ruble(transactions: list) -> list:
-    """Оставляет только транзакции с валютой RUB."""
-    return [t for t in transactions if t.get("currency") == "RUB"]
 
 
 if __name__ == "__main__":
